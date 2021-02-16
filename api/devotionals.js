@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     try {
         const date = new Date();
         const dateFormat = date.getFullYear()+'-'+("0"+(date.getMonth()+1))+'-'+date.getDate()
-        const devs = await Devotional.find({date:dateFormat});
+        const devs = await Devotional.find({date:dateFormat}, {_id:0, title:1, verse:1, category:1, bookName:1, author:1, date:1, imageURL:1, content:1, audioURL:1});
 
         res.status(200).json({success:true, message:!devs?"No devotionals":"Ok", devotionals:devs});
     } catch (err) {
@@ -75,9 +75,8 @@ router.post('/', async (req, res) => {
     const newDevotional = Devotional(req.body);
     
     try {
-        const exists = await Devotional.find({title:newDevotional.title, category:newDevotional.category, bookName:newDevotional.bookName, verse:newDevotional.verse});
-
-        if (exists != []) { //Item already exists
+        const exists = await Devotional.findOne({title:newDevotional.title, category:newDevotional.category, bookName:newDevotional.bookName, verse:newDevotional.verse});
+        if (exists != null) { //Item already exists
             res.status(200).json({success:true, message:"Devotional alredy exists", devotional:exists});
         } else { 
             const dev = await newDevotional.save();
