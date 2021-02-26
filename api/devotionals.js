@@ -7,9 +7,7 @@ const Devotional = require('../models/devotional');
 // Get daily Devotionals
 router.get('/', async (req, res) => {
     try {
-        const date = new Date();
-        const dateFormat = date.getFullYear()+'-'+("0"+(date.getMonth()+1))+'-'+date.getDate()
-        const devs = await Devotional.find({date:dateFormat}, {_id:0, title:1, verse:1, category:1, bookName:1, author:1, date:1, imageURL:1, content:1, audioURL:1});
+        const devs = await Devotional.find({date:req.body.date}, {_id:0, title:1, verse:1, category:1, bookName:1, author:1, date:1, imageURL:1, content:1, audioURL:1});
 
         res.status(200).json({success:true, message:!devs?"No devotionals":"Ok", devotionals:devs});
     } catch (err) {
@@ -21,9 +19,7 @@ router.get('/', async (req, res) => {
 // Get daily Devotionals summary
 router.get('/summary', async (req, res) => {
     try {
-        const date = new Date();
-        const dateFormat = date.getFullYear()+'-'+("0"+(date.getMonth()+1))+'-'+date.getDate()
-        const devs = await Devotional.find({date:dateFormat}, {_id:0, category:1, bookName:1, author:1, imageURL:1});//title:1, date:1,});
+        const devs = await Devotional.find({date:req.body.date}, {_id:0, category:1, bookName:1, author:1, imageURL:1});
 
         res.status(200).json({success:true, message:!devs?"No devotionals":"Ok", devotionals:devs});
     } catch (err) {
